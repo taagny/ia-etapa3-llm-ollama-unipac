@@ -1,6 +1,6 @@
 # Das RNNs aos LLMs
 
-**Nome:** [INSIRA SEU NOME AQUI]  
+**Nome:** Taagny Augusto Reis da Silva  
 **Curso:** Ciência da Computação  
 **Disciplina:** Inteligência Artificial  
 **Instituição:** UNIPAC Barbacena  
