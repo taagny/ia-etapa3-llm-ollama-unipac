@@ -1,0 +1,40 @@
+Modelo: qwen2.5-coder:7b
+Temperature: 1.5
+Top-P: 0.9
+Num-predict: 400
+Seed: 42
+Prompt: Escreva em Python uma função que verifica se uma string é um palíndromo, ignorando espaços, acentos e pontuação, e inclua 3 testes com assert.
+
+Tokens gerados (eval_count): 348
+Duração (segundos): 10.396
+
+--- Resposta ---
+```python
+import re
+
+def is_palindrome(s):
+    # Remove espaços, acentos e pontuação, e converte para minúsculas
+    cleaned = re.sub(r'[\W_]', '', s).lower()
+    # Verifica se a string é igual ao seu reverso
+    return cleaned == cleaned[::-1]
+
+# Testes
+assert is_palindrome('A man, a plan, a canal, Panama'), 'Teste 1 falhou'
+assert is_palindrome('No ' + '\u03B1' + ' manna'), 'Teste 2 falhou'
+assert not is_palindrome('Hello, world!'), 'Teste 3 falhou'
+
+print('Todos os testes passaram com sucesso!')
+```
+
+Neste código:
+1. A função `is_palindrome(s)` recebe uma string `s`.
+2. Utilizamos `re.sub(r'[\W_]', '', s).lower()` para limpar a string:
+   - `[^\W_]` se refere a qualquer caractere que não seja uma letra, número ou underscore.
+   - `sub(...)` substitui esses caracteres vazios.
+   - `lower()` converte a string para minúsculas para ignorar a case sensitivity.
+3. Finalmente, verificamos se a string limpa é igual ao seu reverso (`cleaned[::-1]`) e retornamos o resultado.
+
+Os três `assert` testam a função com:
+- Um palíndromo com espaços, acentos e pontuação
+- Um palíndromo em grego
+- Um exemplo onde a string não é um palíndromo.
