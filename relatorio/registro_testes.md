@@ -34,6 +34,10 @@ As duas execuções sem seed foram diferentes. No C1, o bloco `python` abriu e f
 
 Não houve colapso total em texto aleatório: as respostas ainda apresentaram intenção de código e explicação. Houve, porém, degradação observável na completude, na coerência dos testes e na executabilidade. Portanto, o resultado real foi variação elevada com erros lógicos e sintáticos, não uma conclusão de que toda saída em T=1.5 colapsa.
 
+As saídas mostram inconsistências adicionais. No C1, a explicação chama a categoria Unicode `Lv` de “letra acentuada”, embora essa categoria não exista. No C2, o código chama `unidecode` antes do `from unidecode import unidecode`, referencia a variável `text`, que não existe porque o parâmetro se chama `texto`, e mistura português e inglês na explicação, por exemplo em “Aqui esta three testes” e “case”.
+
+As execuções B sem seed e C sem seed atingiram `eval_count=400`, exatamente o limite de `num_predict=400`. Por isso, o final das respostas foi cortado pelo limite de geração; esse corte é diferente do erro de sintaxe do C1, que ocorreu dentro do bloco Python por causa da aspa não escapada.
+
 Nas duas saídas C com seed 42, o código era sintaticamente válido, mas o teste `is_palindrome('No ' + '\\u03B1' + ' manna')` falhou com `AssertionError`. A string usada nesse teste não é um palíndromo após a normalização implementada.
 
 ## Verificação objetiva do código
