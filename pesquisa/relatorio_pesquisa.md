@@ -29,6 +29,14 @@ Além do gargalo de paralelização, RNNs podem sofrer com gradientes que desapa
 
 ## 2. A quebra de paradigma dos Transformers
 
+O artigo *Attention Is All You Need*, de Vaswani et al. (2017), propôs uma arquitetura baseada em atenção, sem depender de recorrência nem de convoluções para organizar a sequência. Essa mudança foi também uma mudança de engenharia: durante o treinamento, os tokens de uma sequência podem ser processados simultaneamente por operações matriciais altamente paralelizáveis. O hardware passa a trabalhar com blocos maiores e mais regulares, favorecendo escala, throughput e treinamento distribuído.
+
+No mecanismo de Self-Attention, cada posição calcula quanto deve considerar as demais posições da mesma sequência. Em vez de transmitir informação apenas de `t-1` para `t`, uma palavra pode consultar diretamente todas as outras em uma camada. Isso facilita relações de longo alcance e reduz a dependência de uma cadeia temporal durante o treinamento. A arquitetura tornou viáveis famílias como BERT e GPT e, em escala maior, os atuais modelos de linguagem de grande porte.
+
+Como a recorrência deixou de fornecer uma ordem implícita, o Transformer precisa receber informação posicional. Ela pode ser incorporada por codificações posicionais adicionadas aos embeddings ou por representações posicionais aprendidas. Sem esse sinal, a atenção trataria a entrada de maneira insuficientemente sensível à posição de cada token.
+
+Essa vantagem tem uma contrapartida: a atenção normalmente compara cada posição com todas as outras, o que produz custo de tempo e memória `O(n²)` em relação ao comprimento `n` da sequência. Ainda assim, a possibilidade de paralelizar o treinamento e de modelar dependências diretamente tornou o compromisso muito mais favorável para a construção de modelos em grande escala.
+
 ## 3. A mecânica de Query, Key e Value
 
 ## 4. A linha de montagem de um LLM
