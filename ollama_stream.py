@@ -2,7 +2,11 @@
 
 import argparse
 import json
+import re
 import sys
+import time
+from datetime import datetime
+from pathlib import Path
 
 import requests
 
@@ -21,6 +25,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--top-p", type=float, default=0.9, dest="top_p")
     parser.add_argument("--num-predict", type=int, default=300, dest="num_predict")
     parser.add_argument("--seed", type=int)
+    parser.add_argument("--saida")
     args = parser.parse_args()
 
     if args.temperature < 0:
@@ -55,6 +60,9 @@ def main() -> None:
     if args.seed is not None:
         payload["options"]["seed"] = args.seed
 
+    started_at = time.perf_counter()
+    generated = []
+    eval_count = 0
     try:
         response = requests.post(URL, json=payload, stream=True, timeout=None)
         response.raise_for_status()
@@ -63,10 +71,40 @@ def main() -> None:
             if not chunk:
                 continue
             data = json.loads(chunk.decode("utf-8"))
-            print(data.get("response", ""), end="", flush=True)
+            token_text = data.get("response", "")
+            generated.append(token_text)
+            print(token_text, end="", flush=True)
             if data.get("done", False):
+                eval_count = data.get("eval_count", 0)
                 print("\n\n--- Geração concluída ---")
-                print(f"Total de tokens avaliados: {data.get('eval_count', 0)}")
+                print(f"Total de tokens avaliados: {eval_count}")
+
+        duration = time.perf_counter() - started_at
+        output_dir = Path("saidas")
+        output_dir.mkdir(exist_ok=True)
+        if args.saida:
+            output_path = Path(args.saida)
+            if output_path.parent != Path('.'):
+                output_path.parent.mkdir(parents=True, exist_ok=True)
+        else:
+            safe_model = re.sub(r"[^A-Za-z0-9_.-]+", "_", args.model)
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            output_path = output_dir / (
+                f"{safe_model}_t{args.temperature:g}_{timestamp}.txt"
+            )
+        header = (
+            f"Modelo: {args.model}\n"
+            f"Temperature: {args.temperature}\n"
+            f"Top-P: {args.top_p}\n"
+            f"Num-predict: {args.num_predict}\n"
+            f"Seed: {args.seed}\n"
+            f"Prompt: {load_prompt(args)}\n"
+            f"Tokens gerados (eval_count): {eval_count}\n"
+            f"Duração (segundos): {duration:.3f}\n"
+            "\n--- Resposta ---\n"
+        )
+        output_path.write_text(header + "".join(generated), encoding="utf-8")
+        print(f"Resposta salva em: {output_path}")
     except requests.exceptions.ConnectionError:
         print(
             "Erro: não foi possível conectar ao Ollama. "
