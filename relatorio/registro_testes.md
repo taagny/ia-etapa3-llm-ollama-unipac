@@ -14,7 +14,7 @@ Prompt único: [prompt_teste.txt](../experimentos/prompt_teste.txt).
 | B com seed | 2 | 0.9 | 0.9 | 400 | 42 | 385 e 385 | Mesma resposta nas duas execuções |
 | B sem seed | 2 | 0.9 | 0.9 | 400 | ausente | 400 e 400 | Respostas diferentes |
 | C com seed | 2 | 1.5 | 0.9 | 400 | 42 | 348 e 348 | Mesma resposta nas duas execuções; erro lógico no teste 2 |
-| C sem seed | 2 | 1.5 | 1.0 | 400 | ausente | 400 e 400 | Respostas diferentes; uma saída truncada e outra com dependência não aprovada |
+| C sem seed | 2 | 1.5 | 1.0 | 400 | ausente | 400 e 400 | Respostas diferentes; uma saída teve erro de sintaxe por aspa não escapada e outra teve dependência não aprovada |
 
 As execuções antigas B/C com seed 42 estão em [saidas/com_seed/](../saidas/com_seed/). As novas execuções sem seed estão em [saidas/](../saidas/). As respostas foram comparadas desconsiderando o cabeçalho de metadados, que contém durações diferentes.
 
@@ -30,7 +30,7 @@ O cenário B apresentou variação estocástica controlada, mas também mostrou 
 
 ## Cenário C — `temperature=1.5`, `top_p=1.0`
 
-As duas execuções sem seed foram diferentes. A primeira gerou uma implementação com `unicodedata`, mas o bloco Python ficou truncado e falhou em `ast.parse` com `unterminated string literal` na linha 18. A segunda tentou usar `unidecode`, apresentou código e testes inconsistentes e não foi executada pelo verificador porque esse import externo não foi aprovado para a execução segura.
+As duas execuções sem seed foram diferentes. No C1, o bloco `python` abriu e fechou corretamente, mas falhou em `ast.parse` com `unterminated string literal` na linha 18 porque uma string delimitada por aspas simples continha a aspa de `Toyota's` sem escape: `'"A Toyota's a Toyota" deveria ser True ...'`. O texto da explicação posterior ao código foi cortado pelo limite de 400 tokens. O C2 tentou usar `unidecode`, apresentou código e testes inconsistentes e não foi executado pelo verificador porque esse import externo não foi aprovado para a execução segura.
 
 Não houve colapso total em texto aleatório: as respostas ainda apresentaram intenção de código e explicação. Houve, porém, degradação observável na completude, na coerência dos testes e na executabilidade. Portanto, o resultado real foi variação elevada com erros lógicos e sintáticos, não uma conclusão de que toda saída em T=1.5 colapsa.
 
