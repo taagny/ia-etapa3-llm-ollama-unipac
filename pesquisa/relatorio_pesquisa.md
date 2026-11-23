@@ -65,11 +65,11 @@ Logo, a saída é `0,6698 · [2, 0] + 0,3302 · [0, 4] = [1,3396, 1,3208]`. O pr
 
 ### 4.1 Tokenização e representação
 
-O texto precisa ser convertido em unidades manipuláveis pelo modelo. Na tokenização por **Byte Pair Encoding (BPE)**, símbolos ou fragmentos frequentes são combinados progressivamente para formar um vocabulário de subpalavras. Isso permite representar palavras comuns com poucos tokens e ainda lidar com palavras raras por meio de partes menores. Cada token é então associado a um vetor denso, o embedding, que servirá como entrada para as camadas do Transformer.
+O texto precisa ser convertido em unidades manipuláveis pelo modelo. Na tokenização por **Byte Pair Encoding (BPE)**, símbolos ou fragmentos frequentes são combinados progressivamente para formar um vocabulário de subpalavras. Isso permite representar palavras comuns com poucos tokens e ainda lidar com palavras raras por meio de partes menores. Cada token é então associado a um vetor denso, o embedding, que servirá como entrada para as camadas do Transformer (Sennrich et al., 2016).
 
 ### 4.2 Pré-treinamento
 
-No pré-treinamento, o objetivo típico de um modelo causal é prever o próximo token a partir do contexto anterior. Repetido em grandes coleções de texto, esse objetivo ensina padrões de linguagem, fatos presentes nos dados e regularidades de código, mas não garante compreensão, consciência ou verificação da verdade. Essa limitação aparece no chamado “paradoxo do papagaio”: um sistema pode produzir linguagem plausível por imitar padrões sem possuir entendimento humano do que afirma.
+No pré-treinamento, o objetivo típico de um modelo causal é prever o próximo token a partir do contexto anterior. Repetido em grandes coleções de texto, esse objetivo ensina padrões de linguagem, fatos presentes nos dados e regularidades de código, mas não garante compreensão, consciência ou verificação da verdade. Essa limitação aparece no chamado “paradoxo do papagaio”: um sistema pode produzir linguagem plausível por imitar padrões sem possuir entendimento humano do que afirma (Bender et al., 2021).
 
 ### 4.3 Ajuste fino supervisionado
 
@@ -79,7 +79,7 @@ No ajuste fino supervisionado (SFT), o modelo pré-treinado recebe exemplos cura
 
 No **RLHF** (*Reinforcement Learning from Human Feedback*), avaliadores ordenam respostas ou fornecem preferências. Um modelo de recompensa aprende a aproximar essas avaliações e, depois, o modelo de linguagem é otimizado por aprendizado por reforço, frequentemente com um método como PPO. O RLHF é flexível e pode expressar objetivos complexos, mas exige coleta de preferências, treinamento e manutenção de um modelo de recompensa, além de um laço de RL mais complexo e sensível.
 
-O **DPO** (*Direct Preference Optimization*) otimiza diretamente pares de resposta preferida e rejeitada, usando uma referência e uma função objetivo derivada das preferências, sem treinar um modelo de recompensa separado nem executar o laço tradicional de aprendizado por reforço. Isso simplifica a implementação e a estabilidade operacional, embora continue dependente da qualidade e do escopo dos pares de preferência e possa ser menos flexível quando o objetivo não é bem representado por comparações desse tipo.
+O **DPO** (*Direct Preference Optimization*) otimiza diretamente pares de resposta preferida e rejeitada, usando uma referência e uma função objetivo derivada das preferências, sem treinar um modelo de recompensa separado nem executar o laço tradicional de aprendizado por reforço (Rafailov et al., 2023). Isso simplifica a implementação e a estabilidade operacional, embora continue dependente da qualidade e do escopo dos pares de preferência e possa ser menos flexível quando o objetivo não é bem representado por comparações desse tipo.
 
 ## Conclusão
 
@@ -87,11 +87,11 @@ A passagem das RNNs para os Transformers resolveu um gargalo estrutural: em vez 
 
 ## Referências
 
-- BENDER, Emily M. et al. On the Dangers of Stochastic Parrots: Can Language Models Be Too Big? In: *Proceedings of the 2021 ACM Conference on Fairness, Accountability, and Transparency*, 2021.
-- RAFAILOV, Rafael et al. Direct Preference Optimization: Your Language Model is Secretly a Reward Model. In: *Advances in Neural Information Processing Systems*, v. 36, 2023.
-- SENNRICH, Rico; HADDOW, Barry; BOULANGER, Alexandra. Neural Machine Translation of Rare Words with Subword Units. In: *Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics*, 2016.
-- VASWANI, Ashish et al. Attention Is All You Need. In: *Advances in Neural Information Processing Systems*, v. 30, 2017.
+- BENDER, Emily M.; GEBRU, Timnit; MCMILLAN-MAJOR, Angelina; SHMITCHELL, Shmargaret. On the Dangers of Stochastic Parrots: Can Language Models Be Too Big? In: *Proceedings of the 2021 ACM Conference on Fairness, Accountability, and Transparency*, p. 610–623, 2021. DOI: https://doi.org/10.1145/3442188.3445922
+- RAFAILOV, Rafael; SHARMA, Archit; MITCHELL, Eric; MANNING, Christopher D.; ERMON, Stefano; FINN, Chelsea. Direct Preference Optimization: Your Language Model is Secretly a Reward Model. In: *Advances in Neural Information Processing Systems*, v. 36, 2023. DOI: https://doi.org/10.52202/075280-2338
+- SENNRICH, Rico; HADDOW, Barry; BIRCH, Alexandra. Neural Machine Translation of Rare Words with Subword Units. In: *Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics*, p. 1715–1725, 2016. DOI: https://doi.org/10.18653/v1/P16-1162
+- VASWANI, Ashish; SHAZEER, Noam; PARMAR, Niki; USZKOREIT, Jakob; JONES, Llion; GOMEZ, Aidan N.; KAISER, Lukasz; POLOSUKHIN, Illia. Attention Is All You Need. In: *Advances in Neural Information Processing Systems*, v. 30, 2017. Disponível em: https://proceedings.neurips.cc/paper/7181--attention-is-all-you-need.pdf
 
 <!--
-Referências a conferir antes da entrega: dados bibliográficos completos, paginação e links/DOIs de Bender et al. (2021), Rafailov et al. (2023), Sennrich et al. (2016) e Vaswani et al. (2017).
+Referências conferidas em fontes oficiais: ACM, NeurIPS e ACL Anthology. Conferir apenas a adequação do estilo bibliográfico exigido pela disciplina.
 -->
