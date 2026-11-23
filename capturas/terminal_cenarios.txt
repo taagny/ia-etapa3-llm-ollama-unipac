@@ -1,0 +1,132 @@
+Transcrição dos trechos visíveis nas capturas de terminal.
+Trechos que terminam na borda da imagem são marcados como [cortado na captura].
+
+=== print_terminal_1.png — Cenário A, início ===
+
+Comando visível:
+(.venv) PS C:\Users\Taagny\Desktop\ia-etapa3-llm-ollama-unipac> python ollama_stream.py --prompt-file experimentos/prompt_teste.txt --temperature 0.0 --top-p 0.9 --num-predict 400 --seed 42
+
+--- Iniciando geração do modelo (streaming) ---
+
+Aqui está uma função em Python que verifica se uma string é um palíndromo, ignorando espaços, acentos e pontuação:
+
+```python
+import re
+
+def is_palindrome(s):
+    # Remove espaços, acentos e pontuação, e converte para minúsculas
+    cleaned = re.sub(r'[^a-zA-Z0-9]', '', s).lower()
+    # Verifica se a string é igual à sua reversa
+    return cleaned == cleaned[::-1]
+
+# Testes com assert
+assert is_palindrome("A man, a plan, a canal, Panama") == True
+assert is_palindrome("No 'x' in Nixon") == True
+assert is_palindrome("Was it a car or a cat I saw?") == True
+```
+
+Nesta função, usamos a biblioteca `re` para remover todos os caracteres que não são letras ou números. Em seguida, convertemos a string para minúsculas e verificamos se ela é igual à sua reversa.
+
+Os três testes incluem frases com espaços, acentos e pontuação, e devem retornar `True` para indicar que são palíndromos.
+
+=== print_terminal_2.png — fim do A e início do B ===
+
+--- Geração concluída ---
+Total de tokens avaliados: 257
+Resposta salva em: saidas\qwen2.5-coder_7b_t0_20261123_201448.txt
+
+Comando do cenário B visível, com a parte inicial da linha cortada na imagem:
+(.venv) PS C:\Users\Taagny\Desktop\ia-etapa3-llm-ollama-unipac> python ollama_stream.py --prompt-file experimentos/prompt_teste.txt --temperature 0.9 --top-p 0.9 --num-predict 400 [parte final da linha fora da captura]
+
+--- Iniciando geração do modelo (streaming) ---
+
+Claro! Aqui está uma função em Python que verifica se uma string é um palíndromo, ignorando espaços, acentos e pontuação:
+
+```python
+import re
+
+def eh_palindromo(s):
+    # Remove espaços, acentos e pontuação, e converte para minúsculas
+    s = re.sub(r'[^a-zA-Z0-9]', '', s).lower()
+    # Verifica se a string é igual ao seu inverso
+    return s == s[::-1]
+
+# Testes com assert
+assert eh_palindromo("A man, a plan, a canal, Panama") == True
+assert eh_palindromo("No 'x' in Nixon") == True
+assert eh_palindromo("Abel, a was I Elba") == True
+```
+
+=== print_terminal_3.png — fim do B e comando do C ===
+
+--- Iniciando geração do modelo (streaming) ---
+
+Certamente! Abaixo está um exemplo de uma função em Python que verifica se uma string é um palindrome, ignorando espaços, acentos e pontuação, junto com três testes usando as assertions `assert`:
+
+```python
+import re
+
+def clean_string(s):
+    # Remove espaços e normaliza por minúsculas
+    cleaned = re.sub(r'[^\w\s]', '', s).lower()
+    # Retorna apenas os caracteres alfabéticos
+    return re.sub(r'[^a-z]', '', cleaned)
+
+def e_palíndromo(s):
+    # Limpa a string removendo espaços e acentuação
+    cleaned = clean_string(s)
+
+    return cleaned == cleaned[::-1]
+
+# Testes com assertions
+try:
+    assert e_palíndromo("Ame o tempo, melome!") == True
+    # 'ame', 'o', 'tempo', 'melome' formam os mesmos caracteres se invertidos
+
+    assert e_palíndromo("Deuses") == False
+        # A frase 'Deuses' nem ao contrário é herself('esude')
+```
+
+=== print_terminal_4.png — continuação e fim do C ===
+
+    assert e_palíndromo("Deuses") == False
+        # A frase 'Deuses' nem ao contrário é herself('esude')
+
+    # Consideração se há maiúsculas e minúsculas
+    assert e_palíndromo("Lávula!") == True
+        # 'laval' ao contrário também retorna 'Lávula!'
+
+    # Tudo certo, os padrões especificados em ambas as frases são idênticos em contramão
+
+    print("All tests passed!")
+except AssertionError as e:
+    print("Test(s) failed!")
+```
+
+Explanation:
+
+1. **Função `clean_string(s)`:** Utiliza expressões regulares (`regexes`) para remover espaços e pontuação non-alfabéticos de suas versões minúsculas convertidas toda string para minúsculas (`string`). Finalmente, ela substitui [continuação cortada na captura].
+
+--- Geração concluída ---
+Total de tokens avaliados: 400
+Resposta salva em: saidas\qwen2.5-coder_7b_t1.5_20261123_201512.txt
+
+=== print_terminal_5.png — fim do C ===
+
+### Explicação da Função:
+1. **Expressão Regular**: `re.sub(r'[^a-zA-Z0-9]', '', s)` remove todos os caracteres que não são letras ou números da string `s`.
+2. **Conversão para Minúsculas**: `.lower()` garante que a comparação seja case-insensitive.
+3. **Verificação de Palíndromo**: `s == s[::-1]` verifica se a string é igual ao seu inverso.
+
+### Testes com `assert`:
+1. **"A man, a plan, a canal, Panama"**: É um palíndromo quando espaços, pontuação e acentuação são removidos.
+2. **"No 'x' in Nixon"**: É um palíndromo quando espaços e pontuação são removidos.
+3. **"Able , was I saw Elba"**: É um palíndromo quando espaços e pontuação são removidos.
+
+Esses testes garantem que a função funcione corretamente para palíndromos [final cortado na captura].
+
+--- Geração concluída ---
+Total de tokens avaliados: 400
+Resposta salva em: saidas\qwen2.5-coder_7b_t0.9_20261123_201500.txt
+
+(.venv) PS C:\Users\Taagny\Desktop\ia-etapa3-llm-ollama-unipac> python ollama_stream.py --prompt-file experimentos/prompt_teste.txt --temperature 1.5 --top-p 1.0 --num-predict 400
