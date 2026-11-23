@@ -51,11 +51,13 @@ Execute duas vezes cada comando, alterando apenas o nome de saída:
 
 ```powershell
 python ollama_stream.py --model qwen2.5-coder:7b --prompt-file experimentos/prompt_teste.txt --temperature 0.0 --top-p 0.9 --num-predict 400 --seed 42 --saida saidas/cenario_A_1.txt
-python ollama_stream.py --model qwen2.5-coder:7b --prompt-file experimentos/prompt_teste.txt --temperature 0.9 --top-p 0.9 --num-predict 400 --seed 42 --saida saidas/cenario_B_1.txt
-python ollama_stream.py --model qwen2.5-coder:7b --prompt-file experimentos/prompt_teste.txt --temperature 1.5 --top-p 0.9 --num-predict 400 --seed 42 --saida saidas/cenario_C_1.txt
+python ollama_stream.py --model qwen2.5-coder:7b --prompt-file experimentos/prompt_teste.txt --temperature 0.9 --top-p 0.9 --num-predict 400 --saida saidas/cenario_B_1.txt
+python ollama_stream.py --model qwen2.5-coder:7b --prompt-file experimentos/prompt_teste.txt --temperature 1.5 --top-p 1.0 --num-predict 400 --saida saidas/cenario_C_1.txt
 ```
 
 Para a segunda execução de cada cenário, use os nomes `_2.txt`. O registro comentado dos testes está em [relatorio/registro_testes.md](relatorio/registro_testes.md).
+
+Use `--seed 42` quando quiser tornar execuções comparáveis e reproduzíveis, como no cenário A. Omita `--seed` nos cenários B e C quando o objetivo for observar a variação estocástica entre execuções. No cenário C, `--top-p 1.0` libera a cauda completa da distribuição.
 
 ## Estrutura
 
