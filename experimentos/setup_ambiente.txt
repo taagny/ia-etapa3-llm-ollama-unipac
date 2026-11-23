@@ -1,0 +1,39 @@
+Registro real do ambiente local (23/11/2026)
+
+$ ollama --version
+ollama version is 0.40.17
+
+$ ollama list
+NAME                ID              SIZE      MODIFIED
+qwen2.5-coder:7b    dae161e27b0e    4.7 GB    7 seconds ago
+llama3.2:3b         a80c4f17acd5    2.0 GB    41 minutes ago
+
+$ ollama show qwen2.5-coder:7b
+  Model
+    architecture        qwen2
+    parameters          7.6B
+    context length      32768
+    embedding length    3584
+    quantization        Q4_K_M
+    template source     go_template
+
+  Capabilities
+    completion
+    tools
+    insert
+
+  System
+    You are Qwen, created by Alibaba Cloud. You are a helpful assistant.
+
+  License
+    Apache License
+    Version 2.0, January 2004
+
+$ ollama run qwen2.5-coder:7b "Responda apenas OK."
+OK
+
+$ ollama ps
+NAME                ID              SIZE      PROCESSOR    CONTEXT    RUNNER    UNTIL
+qwen2.5-coder:7b    dae161e27b0e    4.8 GB    100% GPU     4096       llamacpp  4 minutes from now
+
+Observação: a saída do comando `ollama ps` foi coletada logo após a geração mínima.
