@@ -39,4 +39,26 @@ Essa vantagem tem uma contrapartida: a atenção normalmente compara cada posiç
 
 ## 3. A mecânica de Query, Key e Value
 
+O Self-Attention pode ser entendido como uma busca contextual. A **Query (Q)** representa o que a posição atual procura no contexto; a **Key (K)** funciona como uma etiqueta ou descrição que cada posição oferece para ser comparada com a busca; e o **Value (V)** contém o conteúdo informacional que será recuperado quando uma posição for considerada relevante. Para cada embedding `X`, a camada produz essas três representações por projeções aprendidas: `Q = XW_Q`, `K = XW_K` e `V = XW_V`.
+
+A operação é definida por
+
+\[
+\operatorname{Attention}(Q,K,V) = \operatorname{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V.
+\]
+
+O produto escalar `QK^T` mede a compatibilidade entre a busca e cada chave. A divisão por `√d_k` evita que os valores cresçam demais quando a dimensão das chaves aumenta. O `softmax` transforma os escores em pesos positivos cuja soma é 1, e a multiplicação final produz uma soma ponderada dos Values.
+
+### Mini-exemplo numérico
+
+Considere uma Query `Q = [1, 0]`, duas Keys `K₁ = [1, 0]` e `K₂ = [0, 1]`, e Values `V₁ = [2, 0]` e `V₂ = [0, 4]`. Como `d_k = 2`, os escores antes da escala são `QK^T = [1, 0]`. Após dividir por `√2`, obtemos aproximadamente `[0,7071, 0]`.
+
+O softmax resulta em
+
+`peso₁ = exp(0,7071) / (exp(0,7071) + exp(0)) ≈ 0,6698`
+
+`peso₂ = exp(0) / (exp(0,7071) + exp(0)) ≈ 0,3302`.
+
+Logo, a saída é `0,6698 · [2, 0] + 0,3302 · [0, 4] = [1,3396, 1,3208]`. O primeiro Value contribui mais porque sua Key é mais compatível com a Query. Em uma arquitetura real, a **Multi-Head Attention** repete essa ideia em várias cabeças, permitindo que cada uma aprenda relações diferentes.
+
 ## 4. A linha de montagem de um LLM
