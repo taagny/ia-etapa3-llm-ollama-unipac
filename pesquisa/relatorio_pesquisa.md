@@ -15,9 +15,9 @@ Este relatório apresenta a transição das redes neurais recorrentes para os mo
 
 Uma rede neural recorrente (RNN) processa uma sequência mantendo um estado oculto que é atualizado a cada instante. Uma forma compacta de representar essa atualização é
 
-\[
+$$
 h_t = f(W_h \cdot h_{t-1} + W_x \cdot x_t + b),
-\]
+$$
 
 em que `x_t` é a entrada no instante `t`, `h_{t-1}` é o estado anterior, `W_h` e `W_x` são matrizes de pesos, `b` é o viés e `f` é uma função não linear. O ponto central é que o cálculo de `h_t` só pode começar depois que `h_{t-1}` estiver pronto. Assim, mesmo que os tokens da sequência estejam disponíveis ao mesmo tempo, os estados precisam ser produzidos em ordem.
 
@@ -43,9 +43,9 @@ O Self-Attention pode ser entendido como uma busca contextual. A **Query (Q)** r
 
 A operação é definida por
 
-\[
+$$
 \operatorname{Attention}(Q,K,V) = \operatorname{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V.
-\]
+$$
 
 O produto escalar `QK^T` mede a compatibilidade entre a busca e cada chave. A divisão por `√d_k` evita que os valores cresçam demais quando a dimensão das chaves aumenta. O `softmax` transforma os escores em pesos positivos cuja soma é 1, e a multiplicação final produz uma soma ponderada dos Values.
 
