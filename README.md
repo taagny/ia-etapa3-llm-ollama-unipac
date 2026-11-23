@@ -72,8 +72,13 @@ Use `--seed 42` quando quiser tornar execuções comparáveis e reproduzíveis, 
 │   ├── prompt_teste.txt
 │   └── setup_ambiente.txt
 ├── saidas/
+│   └── execucao_prints/
 ├── relatorio/registro_testes.md
 └── capturas/
+    ├── print_setup.png
+    ├── print_cenarios.png
+    ├── print_terminal_*.png
+    └── terminal_cenarios.txt
 ```
 
 ## Entregáveis e pendências manuais
