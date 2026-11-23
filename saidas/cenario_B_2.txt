@@ -1,0 +1,39 @@
+Modelo: qwen2.5-coder:7b
+Temperature: 0.9
+Top-P: 0.9
+Num-predict: 400
+Seed: 42
+Prompt: Escreva em Python uma função que verifica se uma string é um palíndromo, ignorando espaços, acentos e pontuação, e inclua 3 testes com assert.
+
+Tokens gerados (eval_count): 385
+Duração (segundos): 11.298
+
+--- Resposta ---
+Claro! Aqui está uma função em Python que verifica se uma string é um palíndromo, considerando apenas letras e desconsiderando espaços, acentos e pontuação. Em seguida, incluo três testes com `assert`:
+
+```python
+import string
+
+def é_palíndromo(s):
+    # Remove espaços, pontuação e transforma para minúsculas
+    s = ''.join(char.lower() for char in s if char.isalnum())
+    # Verifica se a string é igual a sua reversa
+    return s == s[::-1]
+
+# Testes com assert
+assert é_palíndromo("A man, a plan, a canal, Panama") == True
+assert é_palíndromo("No 'x' in Nixon") == True
+assert é_palíndromo("Ovo") == True
+```
+
+### Explicação da Função
+1. **Remoção de Espaços, Pontuação e Acentuação**:
+   - Usamos um gerador de caracteres (`char for char in s`) que filtra apenas os caracteres alfanuméricos (ignora espaços e pontuação).
+   - O método `char.lower()` transforma todos os caracteres em minúsculas para garantir que a comparação seja case-insensitive.
+
+2. **Verificação de Palíndromo**:
+   - `s[::-1]` retorna a string `s` invertida.
+   - A função compara a string original com sua versão invertida e retorna `True` se forem iguais, indicando que a string é um palíndromo.
+
+### Testes
+Os testes com `assert` garantem que a função funcione corretamente para diferentes casos, incluindo strings com espaços, pontuação e acentos.
