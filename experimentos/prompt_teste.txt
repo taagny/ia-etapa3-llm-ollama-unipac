@@ -1,0 +1,1 @@
+Escreva em Python uma função que verifica se uma string é um palíndromo, ignorando espaços, acentos e pontuação, e inclua 3 testes com assert.
