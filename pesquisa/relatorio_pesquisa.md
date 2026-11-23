@@ -62,3 +62,21 @@ O softmax resulta em
 Logo, a saída é `0,6698 · [2, 0] + 0,3302 · [0, 4] = [1,3396, 1,3208]`. O primeiro Value contribui mais porque sua Key é mais compatível com a Query. Em uma arquitetura real, a **Multi-Head Attention** repete essa ideia em várias cabeças, permitindo que cada uma aprenda relações diferentes.
 
 ## 4. A linha de montagem de um LLM
+
+### 4.1 Tokenização e representação
+
+O texto precisa ser convertido em unidades manipuláveis pelo modelo. Na tokenização por **Byte Pair Encoding (BPE)**, símbolos ou fragmentos frequentes são combinados progressivamente para formar um vocabulário de subpalavras. Isso permite representar palavras comuns com poucos tokens e ainda lidar com palavras raras por meio de partes menores. Cada token é então associado a um vetor denso, o embedding, que servirá como entrada para as camadas do Transformer.
+
+### 4.2 Pré-treinamento
+
+No pré-treinamento, o objetivo típico de um modelo causal é prever o próximo token a partir do contexto anterior. Repetido em grandes coleções de texto, esse objetivo ensina padrões de linguagem, fatos presentes nos dados e regularidades de código, mas não garante compreensão, consciência ou verificação da verdade. Essa limitação aparece no chamado “paradoxo do papagaio”: um sistema pode produzir linguagem plausível por imitar padrões sem possuir entendimento humano do que afirma.
+
+### 4.3 Ajuste fino supervisionado
+
+No ajuste fino supervisionado (SFT), o modelo pré-treinado recebe exemplos curados de instruções, perguntas e respostas desejáveis. O treinamento adapta o comportamento para seguir instruções, respeitar formatos e responder de maneira mais útil. A qualidade e a cobertura desses pares são decisivas: exemplos incompletos ou enviesados podem transferir seus problemas para o modelo.
+
+### 4.4 Alinhamento: RLHF e DPO
+
+No **RLHF** (*Reinforcement Learning from Human Feedback*), avaliadores ordenam respostas ou fornecem preferências. Um modelo de recompensa aprende a aproximar essas avaliações e, depois, o modelo de linguagem é otimizado por aprendizado por reforço, frequentemente com um método como PPO. O RLHF é flexível e pode expressar objetivos complexos, mas exige coleta de preferências, treinamento e manutenção de um modelo de recompensa, além de um laço de RL mais complexo e sensível.
+
+O **DPO** (*Direct Preference Optimization*) otimiza diretamente pares de resposta preferida e rejeitada, usando uma referência e uma função objetivo derivada das preferências, sem treinar um modelo de recompensa separado nem executar o laço tradicional de aprendizado por reforço. Isso simplifica a implementação e a estabilidade operacional, embora continue dependente da qualidade e do escopo dos pares de preferência e possa ser menos flexível quando o objetivo não é bem representado por comparações desse tipo.
