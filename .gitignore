@@ -1,0 +1,7 @@
+.env
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Saídas geradas podem ser versionadas quando fizerem parte dos experimentos.
