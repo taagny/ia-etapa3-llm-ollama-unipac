@@ -49,10 +49,20 @@ O procedimento e os resultados completos estão em [verificacao_codigo_gerado.md
 | A1 e A2 | passaram | passaram |
 | B sem seed 1 | passou | passou |
 | B sem seed 2 | passou | falhou no teste 2 |
-| C sem seed 1 | falhou por bloco truncado | não executado |
+| C sem seed 1 | falhou por aspa simples não escapada em `Toyota's` | não executado |
 | C sem seed 2 | passou | não executado por import externo `unidecode` |
 | B com seed 42 (duas execuções) | passaram | passaram |
 | C com seed 42 (duas execuções) | passaram | falharam no teste 2 |
+
+## Execuções dos prints
+
+| Cenário | Parâmetros | Seed | `eval_count` | Resultado da verificação |
+|---|---|---|---:|---|
+| A | `temperature=0.0`, `top_p=0.9`, `num_predict=400` | 42 | 257 | Sintaxe passou; asserts 1, 2 e 3 passaram |
+| B | `temperature=0.9`, `top_p=0.9`, `num_predict=400` | sem seed | 400 | Sintaxe passou; asserts 1, 2 e 3 passaram |
+| C | `temperature=1.5`, `top_p=1.0`, `num_predict=400` | sem seed | 400 | Sintaxe passou; assert 1 falhou, assert 2 passou e assert 3 falhou |
+
+A execução do print do cenário A produziu a mesma resposta da execução anterior com `seed 42` e também registrou 257 tokens. A execução do print do cenário B foi diferente das execuções B anteriores e atingiu o limite de 400 tokens, portanto a resposta foi cortada pelo `num_predict`. No cenário C, a saída misturou português e inglês, incluindo `palindrome`, `alfabéticos`, `herself('esude')` e `Explanation:`. Os testes também foram inconsistentes: `Ame o tempo, melome!` retornou `False` embora o assert esperasse `True`; `Lávula!` foi reduzida a `lvula` porque `[^a-z]` remove letras acentuadas; e o `try/except AssertionError` escondeu a falha agregada imprimindo apenas `Test(s) failed!`. B e C atingiram `eval_count=400`, como mostram os arquivos dos prints.
 
 ## Como temperatura e Top-P influenciam a saída
 
@@ -60,7 +70,28 @@ Se os logits do próximo token são `z_i`, a distribuição usada na amostragem 
 
 O Top-P ordena os tokens por probabilidade e mantém o menor conjunto cuja probabilidade acumulada atinge o valor escolhido. Com `top_p=0.9`, a cauda menos provável é descartada; com `top_p=1.0`, essa restrição de núcleo fica liberada. Assim, temperatura altera a distribuição antes da seleção, enquanto Top-P limita o conjunto final de candidatos.
 
-## Espaço para capturas
+## Capturas da sessão
 
-- [capturas/print_setup.png](../capturas/print_setup.png) — print do setup.
-- [capturas/print_cenarios.png](../capturas/print_cenarios.png) — print dos cenários.
+![Setup do Ollama](../capturas/print_setup.png)
+
+*Print do setup do Ollama e do modelo em GPU.*
+
+![Cenário A, início](../capturas/print_terminal_1.png)
+
+*Cenário A, início.*
+
+![Fim do A e início do B](../capturas/print_terminal_2.png)
+
+*Fim do cenário A e início do cenário B.*
+
+![Fim do B e comando do C](../capturas/print_terminal_3.png)
+
+*Fim do cenário B e comando/início do cenário C.*
+
+![Cenário C, continuação](../capturas/print_terminal_4.png)
+
+*Continuação e fim do cenário C.*
+
+![Cenário C, fim](../capturas/print_terminal_5.png)
+
+*Fim do cenário C e registro da execução.*
