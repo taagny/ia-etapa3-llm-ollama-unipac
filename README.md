@@ -78,6 +78,6 @@ Para a segunda execução de cada cenário, use os nomes `_2.txt`. O registro co
 
 - Relatório teórico: [pesquisa/relatorio_pesquisa.md](pesquisa/relatorio_pesquisa.md).
 - Script e saídas reais dos cenários: [ollama_stream.py](ollama_stream.py) e [saidas/](saidas/).
-- Inserir o nome do aluno no relatório.
+- Nome do aluno preenchido no relatório.
 - Adicionar os prints em `capturas/print_setup.png` e `capturas/print_cenarios.png`.
 - Conferir as referências marcadas no comentário HTML do relatório.
