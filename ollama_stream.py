@@ -44,6 +44,39 @@ def load_prompt(args: argparse.Namespace) -> str:
     return args.prompt or PROMPT_PADRAO
 
 
+def save_response(
+    args: argparse.Namespace,
+    generated: list[str],
+    eval_count: int,
+    duration: float,
+) -> Path:
+    output_dir = Path("saidas")
+    output_dir.mkdir(exist_ok=True)
+    if args.saida:
+        output_path = Path(args.saida)
+        if output_path.parent != Path('.'):
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+    else:
+        safe_model = re.sub(r"[^A-Za-z0-9_.-]+", "_", args.model)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_path = output_dir / (
+            f"{safe_model}_t{args.temperature:g}_{timestamp}.txt"
+        )
+    header = (
+        f"Modelo: {args.model}\n"
+        f"Temperature: {args.temperature}\n"
+        f"Top-P: {args.top_p}\n"
+        f"Num-predict: {args.num_predict}\n"
+        f"Seed: {args.seed}\n"
+        f"Prompt: {load_prompt(args)}\n"
+        f"Tokens gerados (eval_count): {eval_count}\n"
+        f"Duração (segundos): {duration:.3f}\n"
+        "\n--- Resposta ---\n"
+    )
+    output_path.write_text(header + "".join(generated), encoding="utf-8")
+    return output_path
+
+
 def main() -> None:
     sys.stdout.reconfigure(encoding="utf-8")
     args = parse_args()
@@ -80,36 +113,30 @@ def main() -> None:
                 print(f"Total de tokens avaliados: {eval_count}")
 
         duration = time.perf_counter() - started_at
-        output_dir = Path("saidas")
-        output_dir.mkdir(exist_ok=True)
-        if args.saida:
-            output_path = Path(args.saida)
-            if output_path.parent != Path('.'):
-                output_path.parent.mkdir(parents=True, exist_ok=True)
-        else:
-            safe_model = re.sub(r"[^A-Za-z0-9_.-]+", "_", args.model)
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_path = output_dir / (
-                f"{safe_model}_t{args.temperature:g}_{timestamp}.txt"
-            )
-        header = (
-            f"Modelo: {args.model}\n"
-            f"Temperature: {args.temperature}\n"
-            f"Top-P: {args.top_p}\n"
-            f"Num-predict: {args.num_predict}\n"
-            f"Seed: {args.seed}\n"
-            f"Prompt: {load_prompt(args)}\n"
-            f"Tokens gerados (eval_count): {eval_count}\n"
-            f"Duração (segundos): {duration:.3f}\n"
-            "\n--- Resposta ---\n"
-        )
-        output_path.write_text(header + "".join(generated), encoding="utf-8")
+        output_path = save_response(args, generated, eval_count, duration)
         print(f"Resposta salva em: {output_path}")
     except requests.exceptions.ConnectionError:
         print(
             "Erro: não foi possível conectar ao Ollama. "
             "Verifique se o serviço está rodando localmente (ollama serve)."
         )
+    except requests.exceptions.HTTPError as error:
+        if error.response is not None and error.response.status_code == 404:
+            print(
+                f"Erro: o modelo '{args.model}' não está instalado. "
+                f"Execute: ollama pull {args.model}"
+            )
+        else:
+            print(f"Erro HTTP ao consultar o Ollama: {error}")
+    except json.JSONDecodeError as error:
+        print(f"Erro: JSON inválido recebido no stream do Ollama: {error}")
+    except KeyboardInterrupt:
+        duration = time.perf_counter() - started_at
+        if generated:
+            output_path = save_response(args, generated, eval_count, duration)
+            print(f"\nInterrupção recebida. Resposta parcial salva em: {output_path}")
+        else:
+            print("\nInterrupção recebida antes de qualquer token ser gerado.")
     except Exception as error:
         print(f"Ocorreu um erro inesperado: {error}")
 
