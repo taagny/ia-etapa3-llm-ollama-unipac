@@ -1,0 +1,51 @@
+Modelo: qwen2.5-coder:7b
+Temperature: 1.5
+Top-P: 1.0
+Num-predict: 400
+Seed: None
+Prompt: Escreva em Python uma função que verifica se uma string é um palíndromo, ignorando espaços, acentos e pontuação, e inclua 3 testes com assert.
+
+Tokens gerados (eval_count): 400
+Duração (segundos): 11.601
+
+--- Resposta ---
+Certamente! Abaixo está um exemplo de uma função em Python que verifica se uma string é um palindrome, ignorando espaços, acentos e pontuação, junto com três testes usando as assertions `assert`:
+
+```python
+import re
+
+def clean_string(s):
+    # Remove espaços e normaliza por minúsculas
+    cleaned = re.sub(r'[^\w]', '', s).lower()  
+    # Retorna apenas os caracteres alfabéticios
+    return re.sub(r'[^a-z]', '', cleaned)  
+
+def e_palíndromo(s):
+    # Limpa a string removendo spaços e acentuação
+    cleaned = clean_string(s)  
+
+    return cleaned == cleaned[::-1]
+
+# Testes com assertions
+try:
+    assert e_palíndromo("Ame o tempo, melome!") == True 
+        # 'ame', 'o', 'tempo', 'melome' formam os mesmos caracteres se invertidos
+
+    assert e_palíndromo("Deuses") == False  
+        # A frase 'Deuses' nem ao contrário é herself('esude')
+    
+    # Consideranção se há maiúsculas e minúsculas
+    assert e_palíndromo("Lávula!") == True 
+        # 'laval' ao contrário também retorna 'Lávula!'
+     # Tudo certo, os padrões especificados em ambas as frases são identicos em contramão
+
+    print("All tests passed!")
+except AssertionError as e:
+    print("Test(s) failed!")
+
+
+```
+
+Explanation:
+
+1. **Função `clean_string(s)`**: Utiliza expressões regulares (`regexes`) para remover espaços e pontuação non-alfabéticas de suas versões maiúsculas convertidas toda string para minúsculas (`string`). Finalmente, ela substitui

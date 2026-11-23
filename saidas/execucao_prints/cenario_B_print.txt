@@ -1,0 +1,39 @@
+Modelo: qwen2.5-coder:7b
+Temperature: 0.9
+Top-P: 0.9
+Num-predict: 400
+Seed: None
+Prompt: Escreva em Python uma função que verifica se uma string é um palíndromo, ignorando espaços, acentos e pontuação, e inclua 3 testes com assert.
+
+Tokens gerados (eval_count): 400
+Duração (segundos): 11.617
+
+--- Resposta ---
+Claro! Aqui está uma função em Python que verifica se uma string é um palíndromo, ignorando espaços, acentos e pontuação:
+
+```python
+import re
+
+def eh_palindromo(s):
+    # Remove espaços, acentos e pontuação, e converte para minúsculas
+    s = re.sub(r'[^a-zA-Z0-9]', '', s).lower()
+    # Verifica se a string é igual ao seu inverso
+    return s == s[::-1]
+
+# Testes com assert
+assert eh_palindromo("A man, a plan, a canal, Panama") == True
+assert eh_palindromo("No 'x' in Nixon") == True
+assert eh_palindromo("Able , was I saw Elba") == True
+```
+
+### Explicação da Função:
+1. **Expressão Regular**: `re.sub(r'[^a-zA-Z0-9]', '', s)` remove todos os caracteres que não são letras ou números da string `s`.
+2. **Conversão para Minúsculas**: `.lower()` garante que a comparação seja case-insensitive.
+3. **Verificação de Palíndromo**: `s == s[::-1]` verifica se a string é igual ao seu inverso.
+
+### Testes com `assert`:
+1. **"A man, a plan, a canal, Panama"**: É um palíndromo quando espaços, acentos e pontuação são removidos.
+2. **"No 'x' in Nixon"**: É um palíndromo quando espaços e pontuação são removidos.
+3. **"Able , was I saw Elba"**: É um palíndromo quando espaços e pontuação são removidos.
+
+Esses testes garantem que a função funcione corretamente para palíndrom
