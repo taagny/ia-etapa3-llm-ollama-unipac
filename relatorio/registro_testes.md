@@ -2,49 +2,61 @@
 
 ## Ambiente
 
-Os testes foram executados localmente com Ollama `0.40.17`, usando o modelo `qwen2.5-coder:7b`. O comando `ollama show` registrou arquitetura `qwen2`, 7,6B parâmetros e quantização `Q4_K_M`. Após uma geração mínima, `ollama ps` registrou o modelo com `100% GPU`, contexto 4096 e runner `llamacpp`. O registro completo está em [setup_ambiente.txt](../experimentos/setup_ambiente.txt).
+Os testes foram executados localmente com Ollama `0.40.17`, usando o modelo `qwen2.5-coder:7b`. O comando `ollama show` registrou arquitetura `qwen2`, 7,6B parâmetros e quantização `Q4_K_M`. Após uma geração mínima, `ollama ps` registrou `100% GPU`, contexto 4096 e runner `llamacpp`. O registro completo está em [setup_ambiente.txt](../experimentos/setup_ambiente.txt).
 
 Prompt único: [prompt_teste.txt](../experimentos/prompt_teste.txt).
 
 ## Parâmetros e resultados
 
-| Cenário | Execuções | Temperature | Top-P | Num-predict | Seed | `eval_count` | Comparação da resposta |
+| Cenário | Execuções | Temperature | Top-P | Num-predict | Seed | `eval_count` | Resultado observado |
 |---|---:|---:|---:|---:|---:|---:|---|
-| A | 2 | 0.0 | 0.9 | 400 | 42 | 257 em ambas | Idênticas após remover o cabeçalho de metadados |
-| B | 2 | 0.9 | 0.9 | 400 | 42 | 385 em ambas | Idênticas após remover o cabeçalho de metadados |
-| C | 2 | 1.5 | 0.9 | 400 | 42 | 348 em ambas | Idênticas após remover o cabeçalho de metadados |
+| A | 2 | 0.0 | 0.9 | 400 | 42 | 257 e 257 | Mesma resposta nas duas execuções |
+| B com seed | 2 | 0.9 | 0.9 | 400 | 42 | 385 e 385 | Mesma resposta nas duas execuções |
+| B sem seed | 2 | 0.9 | 0.9 | 400 | ausente | 400 e 400 | Respostas diferentes |
+| C com seed | 2 | 1.5 | 0.9 | 400 | 42 | 348 e 348 | Mesma resposta nas duas execuções; erro lógico no teste 2 |
+| C sem seed | 2 | 1.5 | 1.0 | 400 | ausente | 400 e 400 | Respostas diferentes; uma saída truncada e outra com dependência não aprovada |
 
-Os arquivos completos estão em [cenario_A_1.txt](../saidas/cenario_A_1.txt), [cenario_A_2.txt](../saidas/cenario_A_2.txt), [cenario_B_1.txt](../saidas/cenario_B_1.txt), [cenario_B_2.txt](../saidas/cenario_B_2.txt), [cenario_C_1.txt](../saidas/cenario_C_1.txt) e [cenario_C_2.txt](../saidas/cenario_C_2.txt). Os hashes dos arquivos completos do cenário A foram diferentes porque o cabeçalho registra durações diferentes; a comparação do trecho de resposta foi idêntica.
+As execuções antigas B/C com seed 42 estão em [saidas/com_seed/](../saidas/com_seed/). As novas execuções sem seed estão em [saidas/](../saidas/). As respostas foram comparadas desconsiderando o cabeçalho de metadados, que contém durações diferentes.
 
-## Cenário A — `temperature=0.0`
+## Reprodutibilidade com seed
 
-Trecho real: “Aqui está uma função em Python que verifica se uma string é um palíndromo...” seguido de uma implementação com `re.sub`, reversão por `[::-1]` e três `assert`.
-
-As duas respostas foram idênticas e terminaram com 257 tokens avaliados. Esse é o comportamento determinístico observado neste teste. A implementação, contudo, remove caracteres fora de `a-zA-Z0-9`; portanto, a alegação de ignorar acentos não é plenamente atendida para letras acentuadas. O registro descreve o que foi gerado, sem considerar a saída automaticamente correta.
+Com o mesmo prompt, modelo, parâmetros e `seed 42`, A, B e C produziram a mesma resposta nas duas execuções correspondentes. Isso documenta reprodutibilidade neste ambiente. A seed não torna uma resposta correta: nas duas saídas C com seed, o código passou na sintaxe, mas falhou no segundo assert.
 
 ## Cenário B — `temperature=0.9`, `top_p=0.9`
 
-Trecho real: “Claro! Aqui está uma função em Python...” seguido de uma função chamada `é_palíndromo`, usando `char.isalnum()` e três `assert`.
+As duas execuções sem seed foram diferentes, embora ambas tenham atingido o limite de 400 tokens. Uma saída usou `re.sub` para limpar a string; a outra usou `str.maketrans` e incluiu uma explicação diferente. Na verificação objetiva, o primeiro código passou nos asserts, enquanto o segundo falhou em `AssertionError: Teste 2 falhou`.
 
-As duas execuções foram idênticas, com 385 tokens avaliados. Portanto, não foi observada variação entre as duas amostras porque o mesmo `seed 42` foi usado. A resposta ficou mais longa e incluiu uma explicação da função. Como ponto técnico, `isalnum()` mantém letras acentuadas, mas o código não realiza normalização explícita de acentos; isso deve ser conferido antes de considerar o requisito totalmente satisfeito.
+O cenário B apresentou variação estocástica controlada, mas também mostrou que uma resposta plausível pode conter um teste lógico incorreto. O uso sem seed é adequado para observar essa variação; a avaliação precisa verificar o código, não apenas a fluidez da explicação.
 
-## Cenário C — `temperature=1.5`
+## Cenário C — `temperature=1.5`, `top_p=1.0`
 
-Trecho real: a resposta começou diretamente com um bloco `python`, usando `re.sub(r'[\W_]', '', s).lower()` e três `assert`, incluindo um exemplo com `\u03B1`.
+As duas execuções sem seed foram diferentes. A primeira gerou uma implementação com `unicodedata`, mas o bloco Python ficou truncado e falhou em `ast.parse` com `unterminated string literal` na linha 18. A segunda tentou usar `unidecode`, apresentou código e testes inconsistentes e não foi executada pelo verificador porque esse import externo não foi aprovado para a execução segura.
 
-As duas execuções foram idênticas, com 348 tokens avaliados. Não houve colapso sintático: a saída permaneceu legível e apresentou código e explicação. Também não foi observada variação entre as execuções por causa do `seed 42`. Há, porém, um ponto de atenção: a explicação sobre a expressão regular contém uma descrição inconsistente (`[^\W_]` em um trecho, enquanto o código usa `[\W_]`), e o teste em grego não demonstra sozinho a remoção de acentos.
+Não houve colapso total em texto aleatório: as respostas ainda apresentaram intenção de código e explicação. Houve, porém, degradação observável na completude, na coerência dos testes e na executabilidade. Portanto, o resultado real foi variação elevada com erros lógicos e sintáticos, não uma conclusão de que toda saída em T=1.5 colapsa.
+
+Nas duas saídas C com seed 42, o código era sintaticamente válido, mas o teste `is_palindrome('No ' + '\\u03B1' + ' manna')` falhou com `AssertionError`. A string usada nesse teste não é um palíndromo após a normalização implementada.
+
+## Verificação objetiva do código
+
+O procedimento e os resultados completos estão em [verificacao_codigo_gerado.md](verificacao_codigo_gerado.md). Resumo:
+
+| Grupo | Sintaxe | Asserts |
+|---|---|---|
+| A1 e A2 | passaram | passaram |
+| B sem seed 1 | passou | passou |
+| B sem seed 2 | passou | falhou no teste 2 |
+| C sem seed 1 | falhou por bloco truncado | não executado |
+| C sem seed 2 | passou | não executado por import externo `unidecode` |
+| B com seed 42 (duas execuções) | passaram | passaram |
+| C com seed 42 (duas execuções) | passaram | falharam no teste 2 |
 
 ## Como temperatura e Top-P influenciam a saída
 
-Se os logits do próximo token são `z_i`, a distribuição usada na amostragem pode ser escrita como
+Se os logits do próximo token são `z_i`, a distribuição usada na amostragem pode ser escrita como `p_i = softmax(z_i / T)`. Com temperatura baixa, as diferenças entre logits são ampliadas depois da divisão e a distribuição fica mais concentrada nos tokens mais prováveis. Com temperatura maior, a distribuição fica mais plana e tokens menos prováveis podem ser escolhidos, aumentando a diversidade e também o risco de desvios.
 
-`p_i = softmax(z_i / T)`.
-
-Com temperatura baixa, as diferenças entre logits são ampliadas depois da divisão e a distribuição fica mais concentrada nos tokens mais prováveis. Com temperatura maior, a distribuição fica mais plana e tokens menos prováveis podem ser escolhidos, aumentando a diversidade e também o risco de desvios. Em `T=0.0`, o Ollama tratou o cenário como determinístico nesta execução.
-
-O Top-P faz uma segunda restrição: ordena os tokens por probabilidade e mantém o menor conjunto cuja probabilidade acumulada atinge `p=0.9`. A amostragem ocorre dentro desse núcleo, descartando a cauda menos provável. Assim, temperatura altera a distribuição antes da seleção, enquanto Top-P limita o conjunto final de candidatos.
+O Top-P ordena os tokens por probabilidade e mantém o menor conjunto cuja probabilidade acumulada atinge o valor escolhido. Com `top_p=0.9`, a cauda menos provável é descartada; com `top_p=1.0`, essa restrição de núcleo fica liberada. Assim, temperatura altera a distribuição antes da seleção, enquanto Top-P limita o conjunto final de candidatos.
 
 ## Espaço para capturas
 
-- `[capturas/print_setup.png](../capturas/print_setup.png)` — inserir print do setup.
-- `[capturas/print_cenarios.png](../capturas/print_cenarios.png)` — inserir print dos cenários.
+- [capturas/print_setup.png](../capturas/print_setup.png) — print do setup.
+- [capturas/print_cenarios.png](../capturas/print_cenarios.png) — print dos cenários.
