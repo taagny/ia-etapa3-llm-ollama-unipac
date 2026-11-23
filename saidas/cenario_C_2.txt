@@ -1,0 +1,53 @@
+Modelo: qwen2.5-coder:7b
+Temperature: 1.5
+Top-P: 1.0
+Num-predict: 400
+Seed: None
+Prompt: Escreva em Python uma função que verifica se uma string é um palíndromo, ignorando espaços, acentos e pontuação, e inclua 3 testes com assert.
+
+Tokens gerados (eval_count): 400
+Duração (segundos): 11.664
+
+--- Resposta ---
+```python
+import re
+
+def é_palíndromo(texto):
+    """
+    Verifica se uma string é um palíndromo, ignorando espaços, acentos e pontuação
+    parâmetro texto: str a ser validamente exibida 
+    """
+    # Substitui acentos por caracteres comuns
+    texto = unidecode(unidecode(texto))
+
+    # Remove acentos especiais e pontuações usando expressões regulares
+    limpo_texto = re.sub(r'[^\w]', '', texto)
+
+    # Ignora o case, espaços e caracteres especiais
+
+    # Inverte a string (úteis para comparar)
+    inverso_texto = limpo_texto[::-1]
+
+    # Se texto limpo é o mesmo que o inverso, é um palíndromo! (ignorando case, espaços e caracteres especiais)
+    try:
+        assert isinstance(text, str)
+        assert texto == inverso_texto
+        return True
+
+    except AssertionError:
+        print(text in "não é palíndromo")
+        return False
+
+
+
+from unidecode import unidecode
+```
+Aqui esta three testes com assert para a verificação:
+
+```python
+assert é_palíndromo('Rat da taR.') == True, "Error: não é um palíndromo"
+assert é_palíndromo('O gato e o tên')  == True
+assert é_palíndromo("Never odd or even.") == True
+```
+
+Você é capaz de encontrar as respostas para essas testes. Nossa função `é_palíndromo` primeiro remove os acentos e pontuações do texto, depois compara o texto normal vs texto invertido (ignorando casing and spaces). Portanto, 'A man,a plan,a canal,Panma' é
