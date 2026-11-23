@@ -4,4 +4,4 @@ venv/
 __pycache__/
 *.py[cod]
 
-# Saídas geradas podem ser versionadas quando fizerem parte dos experimentos.
+# Saídas e capturas dos experimentos devem permanecer versionadas.
