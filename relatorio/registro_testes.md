@@ -2,6 +2,10 @@
 
 ## Ambiente
 
+![ollama show](../capturas/print_ollama_show.png)
+
+*ollama show: arquitetura qwen2, 7,6B parâmetros, quantização Q4_K_M.*
+
 Os testes foram executados localmente com Ollama `0.40.17`, usando o modelo `qwen2.5-coder:7b`. O comando `ollama show` registrou arquitetura `qwen2`, 7,6B parâmetros e quantização `Q4_K_M`. Após uma geração mínima, `ollama ps` registrou `100% GPU`, contexto 4096 e runner `llamacpp`. O registro completo está em [setup_ambiente.txt](../experimentos/setup_ambiente.txt).
 
 Prompt único: [prompt_teste.txt](../experimentos/prompt_teste.txt).
@@ -62,7 +66,7 @@ O procedimento e os resultados completos estão em [verificacao_codigo_gerado.md
 | B | `temperature=0.9`, `top_p=0.9`, `num_predict=400` | sem seed | 400 | Sintaxe passou; asserts 1, 2 e 3 passaram |
 | C | `temperature=1.5`, `top_p=1.0`, `num_predict=400` | sem seed | 400 | Sintaxe passou; assert 1 falhou, assert 2 passou e assert 3 falhou |
 
-A execução do print do cenário A produziu a mesma resposta da execução anterior com `seed 42` e também registrou 257 tokens. A execução do print do cenário B foi diferente das execuções B anteriores e atingiu o limite de 400 tokens, portanto a resposta foi cortada pelo `num_predict`. No cenário C, a saída misturou português e inglês, incluindo `palindrome`, `alfabéticos`, `herself('esude')` e `Explanation:`. Os testes também foram inconsistentes: `Ame o tempo, melome!` retornou `False` embora o assert esperasse `True`; `Lávula!` foi reduzida a `lvula` porque `[^a-z]` remove letras acentuadas; e o `try/except AssertionError` escondeu a falha agregada imprimindo apenas `Test(s) failed!`. B e C atingiram `eval_count=400`, como mostram os arquivos dos prints.
+A execução do print do cenário A produziu a mesma resposta da execução anterior com `seed 42` e também registrou 257 tokens. A execução do print do cenário B foi diferente das execuções B anteriores e atingiu o limite de 400 tokens, portanto a resposta foi cortada pelo `num_predict`. No cenário C, a saída misturou português e inglês, incluindo `palindrome`, `alfabéticios`, `herself('esude')` e `Explanation:`. Os testes também foram inconsistentes: `Ame o tempo, melome!` retornou `False` embora o assert esperasse `True`; `Lávula!` foi reduzida a `lvula` porque `[^a-z]` remove letras acentuadas; e o `try/except AssertionError` escondeu a falha agregada imprimindo apenas `Test(s) failed!`. B e C atingiram `eval_count=400`, como mostram os arquivos dos prints.
 
 ## Como temperatura e Top-P influenciam a saída
 
@@ -86,12 +90,12 @@ O Top-P ordena os tokens por probabilidade e mantém o menor conjunto cuja proba
 
 ![Fim do B e comando do C](../capturas/print_terminal_3.png)
 
-*Fim do cenário B e comando/início do cenário C.*
+*Fim do cenário B e comando do cenário C.*
 
-![Cenário C, continuação](../capturas/print_terminal_4.png)
+![Cenário C, início](../capturas/print_terminal_4.png)
 
-*Continuação e fim do cenário C.*
+*Início do cenário C, com o código gerado.*
 
 ![Cenário C, fim](../capturas/print_terminal_5.png)
 
-*Fim do cenário C e registro da execução.*
+*Fim do cenário C.*
