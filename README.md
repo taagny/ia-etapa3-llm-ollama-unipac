@@ -66,25 +66,34 @@ Use `--seed 42` quando quiser tornar execuções comparáveis e reproduzíveis, 
 ├── README.md
 ├── requirements.txt
 ├── .gitignore
+├── Exemplo Script Python.py
 ├── ollama_stream.py
 ├── pesquisa/relatorio_pesquisa.md
 ├── experimentos/
 │   ├── prompt_teste.txt
-│   └── setup_ambiente.txt
+│   ├── setup_ambiente.txt
+│   └── verificar_saidas.py
 ├── saidas/
+│   ├── com_seed/
 │   └── execucao_prints/
-├── relatorio/registro_testes.md
+├── relatorio/
+│   ├── registro_testes.md
+│   └── verificacao_codigo_gerado.md
 └── capturas/
     ├── print_setup.png
-    ├── print_cenarios.png
-    ├── print_terminal_*.png
+    ├── print_ollama_show.png
+    ├── print_terminal_1.png
+    ├── print_terminal_2.png
+    ├── print_terminal_3.png
+    ├── print_terminal_4.png
+    ├── print_terminal_5.png
     └── terminal_cenarios.txt
 ```
 
-## Entregáveis e pendências manuais
+## Entregáveis
 
-- Relatório teórico: [pesquisa/relatorio_pesquisa.md](pesquisa/relatorio_pesquisa.md).
-- Script e saídas reais dos cenários: [ollama_stream.py](ollama_stream.py) e [saidas/](saidas/).
-- Nome do aluno preenchido no relatório.
-- Adicionar os prints em `capturas/print_setup.png` e `capturas/print_cenarios.png`.
-- Conferir as referências marcadas no comentário HTML do relatório.
+- Relatório de pesquisa: [pesquisa/relatorio_pesquisa.md](pesquisa/relatorio_pesquisa.md).
+- Script de geração: [ollama_stream.py](ollama_stream.py) e [Exemplo Script Python.py](Exemplo%20Script%20Python.py).
+- Registro de testes: [relatorio/registro_testes.md](relatorio/registro_testes.md).
+- Verificação do código gerado: [relatorio/verificacao_codigo_gerado.md](relatorio/verificacao_codigo_gerado.md) e [experimentos/verificar_saidas.py](experimentos/verificar_saidas.py).
+- Prints da sessão: [capturas/](capturas/) e [saidas/execucao_prints/](saidas/execucao_prints/).
